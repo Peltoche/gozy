@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/Peltoche/gozy/cli/cmd/client"
+	"github.com/Peltoche/gozy/cli/utils/toolbox"
 	"github.com/spf13/cobra"
 )
 
@@ -37,8 +38,10 @@ func Execute() {
 	// Generic flags
 	cmd.PersistentFlags().String("domain", "", "Domain to contact (example: \"foobar.mycozy.cloud\")")
 
+	tb := toolbox.NewProd()
+
 	// Subcommands
-	cmd.AddCommand(client.NewClientCmd())
+	cmd.AddCommand(client.NewClientCmd(tb))
 
 	err := cmd.Execute()
 	if err != nil {

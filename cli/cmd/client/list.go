@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Peltoche/gozy/sdk/config"
+	"github.com/Peltoche/gozy/cli/utils/toolbox"
 	"github.com/spf13/cobra"
 )
 
-func NewListCmd() *cobra.Command {
+func NewListCmd(tb toolbox.Toolbox) *cobra.Command {
 	cmd := cobra.Command{
 		Short: "List the clients locally saved",
 		Args:  cobra.NoArgs,
 		Use:   "list",
 		Run: func(cmd *cobra.Command, _ []string) {
-			res, err := config.NewXDG("gozy").ListClients()
+			res, err := tb.Config().ListClients()
 			if err != nil {
 				cmd.PrintErr(err)
 				os.Exit(1)

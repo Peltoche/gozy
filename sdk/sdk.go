@@ -5,8 +5,6 @@ import (
 	"github.com/Peltoche/gozy/sdk/config"
 )
 
-const appName = "gozy"
-
 type SDK struct {
 	domain string
 	client client.Service
@@ -18,7 +16,7 @@ type SDK struct {
 // The domain is an base url to your instance. For example it would
 // be "https://foobar.mycozy.cloud" for the cozy hosted client with
 // the "foobar" account.
-func NewSDK(domain string) *SDK {
+func NewSDK(appName, domain string) *SDK {
 	return &SDK{
 		domain: domain,
 		client: client.NewHTTPClient(domain),

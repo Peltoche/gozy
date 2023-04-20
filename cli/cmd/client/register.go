@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Peltoche/gozy/cli/utils"
+	"github.com/Peltoche/gozy/cli/utils/toolbox"
 	"github.com/Peltoche/gozy/sdk/client"
 	"github.com/spf13/cobra"
 )
 
-func NewRegisterCmd() *cobra.Command {
+func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 	var opt client.RegisterCmd
 
 	cmd := cobra.Command{
@@ -34,16 +34,24 @@ See OAuth 2.0 Dynamic Client Registration Protocol for the details.`,
 				return
 			}
 
-			sdk := utils.NewClient(cmd)
+			domain := cmd.Flag("domain").Value.String()
+			if domain == "" {
+				cmd.PrintErrln("--domain missing")
+				os.Exit(1)
+			}
 
-			res, err := sdk.Client().Register(cmd.Context(), &opt)
+			res, err := tb.Client(domain).Register(cmd.Context(), &opt)
 			if err != nil {
 				cmd.PrintErrln(err)
 				os.Exit(1)
 			}
 
-			fmt.Printf("Client %q created in %s\n", res.ClientName, sdk.Domain())
-			sdk.Config().SaveClient(res)
+			fmt.Printf("Client %q created in %s\n", res.ClientName, domain)
+			err = tb.Config().SaveClient(res)
+			if err != nil {
+				cmd.PrintErrln(err)
+				os.Exit(1)
+			}
 		},
 	}
 

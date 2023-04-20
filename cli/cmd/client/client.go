@@ -2,10 +2,11 @@ package client
 
 import (
 	"github.com/MakeNowJust/heredoc"
+	"github.com/Peltoche/gozy/cli/utils/toolbox"
 	"github.com/spf13/cobra"
 )
 
-func NewClientCmd() *cobra.Command {
+func NewClientCmd(tb toolbox.Toolbox) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "client <command>",
 		Short: "Manage clients",
@@ -15,8 +16,8 @@ func NewClientCmd() *cobra.Command {
   `),
 	}
 
-	cmd.AddCommand(NewRegisterCmd())
-	cmd.AddCommand(NewListCmd())
+	cmd.AddCommand(NewRegisterCmd(tb))
+	cmd.AddCommand(NewListCmd(tb))
 
 	return cmd
 }
