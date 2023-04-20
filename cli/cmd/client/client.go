@@ -16,6 +16,7 @@ func NewClientCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(NewRegisterCmd())
+	cmd.AddCommand(NewListCmd())
 
 	return cmd
 }

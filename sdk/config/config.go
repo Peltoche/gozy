@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/Peltoche/gozy/sdk/client"
 	"github.com/adrg/xdg"
@@ -77,7 +78,7 @@ func (c *XDG) LoadClient(name string) (*client.Client, error) {
 //
 // If $XDG_DATA_HOME doesnt exists, fallback to `$HOME/.local/share/`.
 func (c *XDG) ListClients() ([]client.Client, error) {
-	clientsDir := path.Join(xdg.DataHome, clientDir)
+	clientsDir := path.Join(xdg.DataHome, c.appName, clientDir)
 
 	entries, err := os.ReadDir(clientsDir)
 	if err != nil {
@@ -87,7 +88,9 @@ func (c *XDG) ListClients() ([]client.Client, error) {
 	res := make([]client.Client, len(entries))
 
 	for i, entry := range entries {
-		client, err := c.LoadClient(entry.Name())
+		clientName := strings.TrimSuffix(entry.Name(), ".json")
+
+		client, err := c.LoadClient(clientName)
 		if err != nil {
 			return nil, fmt.Errorf("failed to load %q: %w", entry.Name(), err)
 		}
