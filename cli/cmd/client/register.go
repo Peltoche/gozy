@@ -11,6 +11,7 @@ import (
 
 func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 	var opt client.RegisterCmd
+	var domain string
 
 	cmd := cobra.Command{
 		Short: "Register a new application client.",
@@ -23,18 +24,17 @@ func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 				return
 			}
 
+			if domain == "" {
+				cmd.PrintErrln("--domain missing")
+				os.Exit(1)
+			}
+
 			opt.ClientName = args[0]
 
 			if len(opt.RedirectURIs) == 0 || opt.SoftwareID == "" {
 				cmd.PrintErrln("must provide --redirect-uris and --software-id when not running interactively\n")
 				cmd.Usage()
 				return
-			}
-
-			domain := cmd.Flag("domain").Value.String()
-			if domain == "" {
-				cmd.PrintErrln("--domain missing")
-				os.Exit(1)
 			}
 
 			res, err := tb.Client(domain).Register(cmd.Context(), &opt)
@@ -63,6 +63,8 @@ func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 	cmd.Flags().StringVar(&opt.NotificationPlatform, "notification-platform", "", "To activate notifications on the associated device.")
 	cmd.Flags().StringVar(&opt.PolicyURI, "policy-uri", "", "URL string pointing to a human-readable policy.")
 	cmd.Flags().StringVar(&opt.SoftwareVersion, "software-version", "", "A version identifier string for the client software")
+
+	cmd.Flags().StringVar(&domain, "domain", "", "Domain to contact (example: \"foobar.mycozy.cloud\")")
 
 	return &cmd
 }

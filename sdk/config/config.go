@@ -57,7 +57,7 @@ func (c *XDG) SaveClient(client *client.Client) error {
 func (c *XDG) LoadClient(name string) (*client.Client, error) {
 	clientFile, err := xdg.SearchDataFile(path.Join(c.appName, clientDir, name+".json"))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unknown client %q", name)
 	}
 
 	raw, err := os.ReadFile(clientFile)
@@ -99,4 +99,13 @@ func (c *XDG) ListClients() ([]client.Client, error) {
 	}
 
 	return res, nil
+}
+
+func (c *XDG) DeleteClient(name string) error {
+	clientFile, err := xdg.SearchDataFile(path.Join(c.appName, clientDir, name+".json"))
+	if err != nil {
+		return fmt.Errorf("unknown client %q", name)
+	}
+
+	return os.Remove(path.Join(clientFile))
 }

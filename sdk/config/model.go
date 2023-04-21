@@ -6,4 +6,5 @@ type Service interface {
 	SaveClient(client *client.Client) error
 	LoadClient(name string) (*client.Client, error)
 	ListClients() ([]client.Client, error)
+	DeleteClient(name string) error
 }

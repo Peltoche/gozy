@@ -4,6 +4,7 @@ import "context"
 
 type Service interface {
 	Register(ctx context.Context, cmd *RegisterCmd) (*Client, error)
+	Delete(ctx context.Context, cmd *DeleteCmd) error
 }
 
 type Client struct {
@@ -32,4 +33,9 @@ type RegisterCmd struct {
 	SecretExpiresAt      int      `json:"client_secret_expires_at"`
 	SoftwareVersion      string   `json:"software_version,omitempty"`
 	NotificationPlatform string   `json:"notification_platform"`
+}
+
+type DeleteCmd struct {
+	ClientID        string
+	RegistrationCmd string
 }

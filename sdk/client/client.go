@@ -4,9 +4,17 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+)
+
+var (
+	ErrRequestFormat    = errors.New("failed to generate the request")
+	ErrRequestSend      = errors.New("request failed")
+	ErrReadBody         = errors.New("failed to read the response body")
+	ErrUnexpectedStatus = errors.New("unexpected response status")
 )
 
 // HTTPClient is the main interface used to interact with an the [Client] resource.
@@ -40,25 +48,49 @@ func (s *HTTPClient) Register(ctx context.Context, cmd *RegisterCmd) (*Client, e
 
 	res, err := s.client.Do(req.WithContext(ctx))
 	if err != nil {
-		return nil, fmt.Errorf("failed to register the application: %w", err)
+		return nil, fmt.Errorf("%w: %w", ErrRequestFormat, err)
 	}
 	defer res.Body.Close()
 
 	raw, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read the response body: %w", err)
+		return nil, fmt.Errorf("%w: %w", ErrReadBody, err)
 	}
 
 	if res.StatusCode != 200 && res.StatusCode != 201 {
-		return nil, fmt.Errorf("unexpected response %q status for register: %s", res.Status, string(raw))
+		return nil, fmt.Errorf("%w: %q : %s", ErrUnexpectedStatus, res.Status, string(raw))
 	}
 
 	// First unmarshal for the client
 	var resBody Client
 	err = json.Unmarshal(raw, &resBody)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode the register response: %s", err)
+		return nil, fmt.Errorf("failed to decode response: %s", err)
 	}
 
 	return &resBody, nil
+}
+
+func (s *HTTPClient) Delete(ctx context.Context, cmd *DeleteCmd) error {
+	req, err := http.NewRequest(http.MethodDelete, "https://jeanbon.mycozy.cloud/auth/register/"+cmd.ClientID, nil)
+	if err != nil {
+		return fmt.Errorf("%w: %w", ErrRequestFormat, err)
+	}
+
+	res, err := s.client.Do(req.WithContext(ctx))
+	if err != nil {
+		return fmt.Errorf("%w: %w", ErrRequestSend, err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusNoContent {
+		raw, err := io.ReadAll(res.Body)
+		if err != nil {
+			return fmt.Errorf("%w: %w", ErrReadBody, err)
+		}
+
+		return fmt.Errorf("%w: %q : %s", ErrUnexpectedStatus, res.Status, string(raw))
+	}
+
+	return nil
 }
