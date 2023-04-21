@@ -18,6 +18,7 @@ func NewClientCmd(tb toolbox.Toolbox) *cobra.Command {
 
 	cmd.AddCommand(NewRegisterCmd(tb))
 	cmd.AddCommand(NewListCmd(tb))
+	cmd.AddCommand(NewDescribeCmd(tb))
 
 	return cmd
 }

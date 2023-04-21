@@ -14,11 +14,8 @@ func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 
 	cmd := cobra.Command{
 		Short: "Register a new application client.",
-		Long: `This route is used by OAuth2 clients to dynamically register them-selves.
-
-See OAuth 2.0 Dynamic Client Registration Protocol for the details.`,
-		Args: cobra.ExactArgs(1),
-		Use:  "register [<name>]",
+		Args:  cobra.ExactArgs(1),
+		Use:   "register [<name>]",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				cmd.PrintErrln("must provide <name> when not running interactively\n")
