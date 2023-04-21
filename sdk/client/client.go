@@ -72,7 +72,7 @@ func (s *HTTPClient) Register(ctx context.Context, cmd *RegisterCmd) (*Client, e
 }
 
 func (s *HTTPClient) Delete(ctx context.Context, cmd *DeleteCmd) error {
-	req, err := http.NewRequest(http.MethodDelete, "https://jeanbon.mycozy.cloud/auth/register/"+cmd.ClientID, nil)
+	req, err := http.NewRequest(http.MethodDelete, "https://jeanbon.mycozy.cloud/auth/register/"+cmd.ClientName, nil)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrRequestFormat, err)
 	}

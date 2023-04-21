@@ -36,6 +36,6 @@ type RegisterCmd struct {
 }
 
 type DeleteCmd struct {
-	ClientID        string
+	ClientName      string
 	RegistrationCmd string
 }

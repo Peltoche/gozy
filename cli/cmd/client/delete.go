@@ -29,7 +29,7 @@ func NewDeleteCmd(tb toolbox.Toolbox) *cobra.Command {
 			}
 
 			err = tb.Client(domain).Delete(cmd.Context(), &client.DeleteCmd{
-				ClientID:        res.ClientID,
+				ClientName:      res.ClientName,
 				RegistrationCmd: res.RegistrationToken,
 			})
 			if err != nil {
