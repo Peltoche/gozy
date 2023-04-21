@@ -36,7 +36,6 @@ func Execute() {
 	}
 
 	// Generic flags
-	cmd.PersistentFlags().String("domain", "", "Domain to contact (example: \"foobar.mycozy.cloud\")")
 
 	tb := toolbox.NewProd()
 
