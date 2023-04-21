@@ -16,7 +16,7 @@ func NewListCmd(tb toolbox.Toolbox) *cobra.Command {
 		Run: func(cmd *cobra.Command, _ []string) {
 			res, err := tb.Config().ListClients()
 			if err != nil {
-				cmd.PrintErr(err)
+				cmd.PrintErrln(err)
 				os.Exit(1)
 			}
 

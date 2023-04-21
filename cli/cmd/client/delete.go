@@ -24,7 +24,7 @@ func NewDeleteCmd(tb toolbox.Toolbox) *cobra.Command {
 
 			res, err := tb.Config().LoadClient(args[0])
 			if err != nil {
-				cmd.PrintErr(err)
+				cmd.PrintErrln(err)
 				os.Exit(1)
 			}
 
@@ -33,7 +33,7 @@ func NewDeleteCmd(tb toolbox.Toolbox) *cobra.Command {
 				RegistrationCmd: res.RegistrationToken,
 			})
 			if err != nil {
-				cmd.PrintErr(err)
+				cmd.PrintErrln(err)
 				os.Exit(1)
 			}
 

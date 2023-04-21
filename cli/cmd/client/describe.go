@@ -16,7 +16,7 @@ func NewDescribeCmd(tb toolbox.Toolbox) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			res, err := tb.Config().LoadClient(args[0])
 			if err != nil {
-				cmd.PrintErr(err)
+				cmd.PrintErrln(err)
 				os.Exit(1)
 			}
 
