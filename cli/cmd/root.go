@@ -28,7 +28,7 @@ import (
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	cmd := &cobra.Command{
-		Use:   "cozy",
+		Use:   "gozy",
 		Short: "Manage your cozy instance in your terminal.",
 		// Uncomment the following line if your bare application
 		// has an action associated with it:
