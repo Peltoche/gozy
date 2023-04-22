@@ -6,10 +6,10 @@ name: SDK
 on:
   push:
     branches: [ "master" ]
-    paths: [ "./sdk"]
+    paths: [ "./sdk/**"]
   pull_request:
     branches: [ "master" ]
-    paths: [ "./sdk"]
+    paths: [ "./sdk/**"]
 
 jobs:
 

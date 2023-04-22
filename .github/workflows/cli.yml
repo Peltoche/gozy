@@ -6,10 +6,10 @@ name: CLI
 on:
   push:
     branches: [ "master" ]
-    paths: [ "./cli"]
+    paths: [ "./cli/**"]
   pull_request:
     branches: [ "master" ]
-    paths: [ "./cli"]
+    paths: [ "./cli/**"]
 
 jobs:
 
