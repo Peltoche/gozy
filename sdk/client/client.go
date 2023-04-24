@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/Peltoche/gozy/sdk/instance"
 )
 
 var (
@@ -19,7 +21,7 @@ var (
 
 // HTTPClient is the main interface used to interact with an the [Client] resource.
 type HTTPClient struct {
-	domain string
+	inst   *instance.Instance
 	client *http.Client
 }
 
@@ -28,9 +30,9 @@ type HTTPClient struct {
 // The domain is an base url to your instance. For example it would
 // be "https://foobar.mycozy.cloud" for the cozy hosted client with
 // the "foobar" account.
-func NewHTTPClient(domain string) *HTTPClient {
+func NewHTTPClient(inst *instance.Instance) *HTTPClient {
 	return &HTTPClient{
-		domain: domain,
+		inst:   inst,
 		client: http.DefaultClient,
 	}
 }
@@ -38,7 +40,8 @@ func NewHTTPClient(domain string) *HTTPClient {
 func (s *HTTPClient) Register(ctx context.Context, cmd *RegisterCmd) (*Client, error) {
 	rawBody, _ := json.Marshal(cmd)
 
-	req, err := http.NewRequest(http.MethodPost, "https://jeanbon.mycozy.cloud/auth/register", bytes.NewReader(rawBody))
+	registerURL := s.inst.URL().JoinPath("/auth/register").String()
+	req, err := http.NewRequest(http.MethodPost, registerURL, bytes.NewReader(rawBody))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create the register request: %w", err)
 	}

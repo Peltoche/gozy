@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Peltoche/gozy/cli/utils"
 	"github.com/Peltoche/gozy/cli/utils/toolbox"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +15,9 @@ func NewListCmd(tb toolbox.Toolbox) *cobra.Command {
 		Args:  cobra.NoArgs,
 		Use:   "list",
 		Run: func(cmd *cobra.Command, _ []string) {
-			res, err := tb.Config().ListClients()
+			inst := utils.GetInstance(cmd, tb)
+
+			res, err := tb.ClientStorage().List(inst)
 			if err != nil {
 				cmd.PrintErrln(err)
 				os.Exit(1)

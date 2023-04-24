@@ -3,6 +3,7 @@ package client
 import (
 	"os"
 
+	"github.com/Peltoche/gozy/cli/utils"
 	"github.com/Peltoche/gozy/cli/utils/toolbox"
 	"github.com/cheynewallace/tabby"
 	"github.com/spf13/cobra"
@@ -14,9 +15,11 @@ func NewDescribeCmd(tb toolbox.Toolbox) *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Use:   "describe [<name>]",
 		Run: func(cmd *cobra.Command, args []string) {
-			res, err := tb.Config().LoadClient(args[0])
+			inst := utils.GetInstance(cmd, tb)
+
+			res, err := tb.ClientStorage().Load(inst, args[0])
 			if err != nil {
-				cmd.PrintErrln(err)
+				cmd.Printf("client %q not found: run \"%s client list\" to have the available clients\n", args[0], tb.AppName())
 				os.Exit(1)
 			}
 

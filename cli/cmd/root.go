@@ -19,6 +19,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/Peltoche/gozy/cli/cmd/auth"
 	"github.com/Peltoche/gozy/cli/cmd/client"
 	"github.com/Peltoche/gozy/cli/utils/toolbox"
 	"github.com/spf13/cobra"
@@ -40,7 +41,10 @@ func Execute() {
 	tb := toolbox.NewProd()
 
 	// Subcommands
+	cmd.AddCommand(auth.NewAuthCmd(tb))
 	cmd.AddCommand(client.NewClientCmd(tb))
+
+	cmd.PersistentFlags().StringP("instance", "I", "", "Instance to contact (example: \"foobar.mycozy.cloud\")")
 
 	err := cmd.Execute()
 	if err != nil {
