@@ -18,7 +18,7 @@ func NewProd() *Prod {
 }
 
 func (p *Prod) Config() config.Service {
-	return config.NewXDG(appName)
+	return config.NewXDGConfig(appName)
 }
 
 func (p *Prod) Client(domain string) client.Service {
