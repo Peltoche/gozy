@@ -19,7 +19,7 @@ func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 		Use:   "register [<name>]",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				cmd.PrintErrln("must provide <name> when not running interactively\n")
+				cmd.PrintErrln("must provide <name> when not running interactively")
 				cmd.Usage()
 				return
 			}
@@ -32,7 +32,7 @@ func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 			opt.ClientName = args[0]
 
 			if len(opt.RedirectURIs) == 0 || opt.SoftwareID == "" {
-				cmd.PrintErrln("must provide --redirect-uris and --software-id when not running interactively\n")
+				cmd.PrintErrln("must provide --redirect-uris and --software-id when not running interactively")
 				cmd.Usage()
 				return
 			}
