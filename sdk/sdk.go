@@ -6,9 +6,9 @@ import (
 )
 
 type SDK struct {
-	domain string
-	client client.Service
-	config config.Service
+	domain       string
+	unauthClient client.UnauthenticatedService
+	config       config.Service
 }
 
 // NewHTTPClient instantiate a new [HTTPClient] for the given domain.
@@ -18,9 +18,9 @@ type SDK struct {
 // the "foobar" account.
 func NewSDK(appName, domain string) *SDK {
 	return &SDK{
-		domain: domain,
-		client: client.NewHTTPClient(domain),
-		config: config.NewXDG(appName),
+		domain:       domain,
+		unauthClient: client.NewUnauthenticatedHTTPClient(domain),
+		config:       config.NewXDGConfig(appName),
 	}
 }
 
@@ -29,9 +29,9 @@ func (s *SDK) Domain() string {
 	return s.domain
 }
 
-// Client return the Client Service used to manipulate the client resource.
-func (s *SDK) Client() client.Service {
-	return s.client
+// UnauthClient return the Client Service used to manipulate the client resource.
+func (s *SDK) UnauthClient() client.UnauthenticatedService {
+	return s.unauthClient
 }
 
 func (s *SDK) Config() config.Service {
