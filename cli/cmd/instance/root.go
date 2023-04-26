@@ -21,6 +21,7 @@ func NewInstanceCmd(tb toolbox.Toolbox) *cobra.Command {
 	cmd.AddCommand(NewSaveCmd(tb))
 	cmd.AddCommand(NewSetDefaultCmd(tb))
 	cmd.AddCommand(NewStatusCmd(tb))
+	cmd.AddCommand(NewVersionCmd(tb))
 
 	return cmd
 }

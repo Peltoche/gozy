@@ -5,6 +5,13 @@ import (
 	"net/url"
 )
 
+type Version struct {
+	BuildMode      string `json:"build_mode"`
+	BuildTime      string `json:"build_time"`
+	RuntimeVersion string `json:"runtime_version"`
+	Version        string `json:"version"`
+}
+
 type Status struct {
 	Cache   string            `json:"cache"`
 	Couchdb string            `json:"couchdb"`

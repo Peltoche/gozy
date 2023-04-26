@@ -40,3 +40,21 @@ func (c *HTTPClient) Status() (*Status, error) {
 
 	return &status, nil
 }
+
+func (c *HTTPClient) Version() (*Version, error) {
+	versionURL := c.instance.URL().JoinPath("/version").String()
+
+	res, err := http.Get(versionURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to check the status: %w", err)
+	}
+	defer res.Body.Close()
+
+	var version Version
+	err = json.NewDecoder(res.Body).Decode(&version)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode the response status: %w", err)
+	}
+
+	return &version, nil
+}

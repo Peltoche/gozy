@@ -30,6 +30,7 @@ type ClientStorageService interface {
 
 type InstanceService interface {
 	Status() (*instance.Status, error)
+	Version() (*instance.Version, error)
 }
 
 type InstanceStorageService interface {
