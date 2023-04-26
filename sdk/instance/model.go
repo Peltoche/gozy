@@ -3,16 +3,15 @@ package instance
 import (
 	"fmt"
 	"net/url"
-	"time"
 )
 
 type Status struct {
-	Cache   string                   `json:"cache"`
-	Couchdb string                   `json:"couchdb"`
-	FS      string                   `json:"fs"`
-	Latency map[string]time.Duration `json:"latency"`
-	Message string                   `json:"message"`
-	Status  string                   `json:"status"`
+	Cache   string            `json:"cache"`
+	Couchdb string            `json:"couchdb"`
+	FS      string            `json:"fs"`
+	Latency map[string]string `json:"latency"`
+	Message string            `json:"message"`
+	Status  string            `json:"status"`
 }
 
 type Instance struct {

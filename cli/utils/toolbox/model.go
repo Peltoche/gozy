@@ -29,6 +29,7 @@ type ClientStorageService interface {
 }
 
 type InstanceService interface {
+	Status() (*instance.Status, error)
 }
 
 type InstanceStorageService interface {
