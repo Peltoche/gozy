@@ -35,6 +35,7 @@ type InstanceStorageService interface {
 	List() ([]instance.Instance, error)
 	Forget(inst *instance.Instance) error
 	Save(inst *instance.Instance) error
+	Load(instance string) (*instance.Instance, error)
 }
 
 // Toolbox give access to all the required tools.

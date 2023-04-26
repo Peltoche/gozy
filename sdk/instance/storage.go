@@ -20,6 +20,26 @@ func (s *Storage) Dir() string {
 	return s.dir
 }
 
+func (s *Storage) Load(instanceName string) (*Instance, error) {
+	inst, err := NewFromStr(instanceName)
+	if err != nil {
+		return nil, fmt.Errorf("invalide instance name: %w", err)
+	}
+
+	instances, err := s.List()
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch the existing instances: %w", err)
+	}
+
+	for _, i := range instances {
+		if i.Name() == inst.Name() {
+			return &i, nil
+		}
+	}
+
+	return nil, nil
+}
+
 func (s *Storage) List() ([]Instance, error) {
 	entries, err := os.ReadDir(s.dir)
 	if err != nil {
