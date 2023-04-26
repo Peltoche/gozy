@@ -9,7 +9,6 @@ import (
 )
 
 const appName = "gozy"
-const clientDir = "clients"
 
 type ClientService interface {
 	Register(ctx context.Context, cmd *client.RegisterCmd) (*client.Client, error)
@@ -23,13 +22,19 @@ type ConfigService interface {
 }
 
 type ClientStorageService interface {
-	Save(inst *instance.Instance, client *client.Client) error
-	List(inst *instance.Instance) ([]client.Client, error)
-	Load(inst *instance.Instance, client string) (*client.Client, error)
-	Delete(inst *instance.Instance, client string) error
+	Save(client *client.Client) error
+	List() ([]client.Client, error)
+	Load(client string) (*client.Client, error)
+	Delete(client string) error
 }
 
 type InstanceService interface {
+}
+
+type InstanceStorageService interface {
+	List() ([]instance.Instance, error)
+	Forget(inst *instance.Instance) error
+	Save(inst *instance.Instance) error
 }
 
 // Toolbox give access to all the required tools.
@@ -42,8 +47,9 @@ type InstanceService interface {
 // - [Mock] With only mocked tools. Used for testing.
 type Toolbox interface {
 	Instance(instance *instance.Instance) InstanceService
+	InstanceStorage() InstanceStorageService
 	Client(instance *instance.Instance) ClientService
-	ClientStorage() ClientStorageService
+	ClientStorage(inst *instance.Instance) ClientStorageService
 	Config() ConfigService
 	AppName() string
 }

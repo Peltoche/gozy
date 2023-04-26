@@ -1,4 +1,4 @@
-package client
+package instance
 
 import (
 	"fmt"
@@ -11,14 +11,14 @@ import (
 func NewForgetCmd(tb toolbox.Toolbox) *cobra.Command {
 	cmd := cobra.Command{
 		Short: "Forget a client on this machine.",
-		Args:  cobra.ExactArgs(1),
-		Use:   "forget [<name>]",
+		Args:  cobra.NoArgs,
+		Use:   "forget",
 		Run: func(cmd *cobra.Command, args []string) {
 			inst := utils.GetInstance(cmd, tb)
 
-			tb.ClientStorage(inst).Delete(args[0])
+			tb.InstanceStorage().Forget(inst)
 
-			fmt.Printf("The client %q have been forgotten\n", args[0])
+			fmt.Printf("The %q have been forgotten\n", args[0])
 		},
 	}
 

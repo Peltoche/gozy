@@ -20,7 +20,7 @@ func NewDeleteCmd(tb toolbox.Toolbox) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			inst := utils.GetInstance(cmd, tb)
 
-			res, err := tb.ClientStorage().Load(inst, args[0])
+			res, err := tb.ClientStorage(inst).Load(args[0])
 			if err != nil {
 				cmd.PrintErrln(err)
 				os.Exit(1)
@@ -35,7 +35,7 @@ func NewDeleteCmd(tb toolbox.Toolbox) *cobra.Command {
 				os.Exit(1)
 			}
 
-			tb.ClientStorage().Delete(inst, res.ClientName)
+			tb.ClientStorage(inst).Delete(res.ClientName)
 
 			fmt.Printf("The client %q have been deleted\n", res.ClientName)
 

@@ -9,30 +9,28 @@ import (
 	"strings"
 
 	"github.com/Peltoche/gozy/sdk/instance"
+	"github.com/adrg/xdg"
 )
+
+const clientDir = "clients"
 
 type Storage struct {
 	dir string
 }
 
-func NewStorage(dir string) *Storage {
-	return &Storage{dir}
+func NewStorage(appName string, inst *instance.Instance) *Storage {
+	return &Storage{dir: path.Join(xdg.ConfigHome, appName, inst.Name(), clientDir)}
 }
 
-// SaveClient in `$XDG_CONFIG_HOME/{appName}/{instance}/clients//{name}`.
-//
-// If $XDG_DATA_HOME doesnt exists, fallback to `$HOME/.local/share/`.
-func (s *Storage) Save(inst *instance.Instance, client *Client) error {
-	fileDir := path.Join(s.dir, inst.Name())
-
-	err := os.MkdirAll(fileDir, 0o755)
+func (s *Storage) Save(client *Client) error {
+	err := os.MkdirAll(s.dir, 0o755)
 	if err != nil {
 		return err
 	}
 
 	raw, _ := json.MarshalIndent(client, "  ", "  ")
 
-	filePath := path.Join(fileDir, client.ClientName+".json")
+	filePath := path.Join(s.dir, client.ClientName+".json")
 
 	err = os.WriteFile(filePath, raw, 0o644)
 	if err != nil {
@@ -42,19 +40,14 @@ func (s *Storage) Save(inst *instance.Instance, client *Client) error {
 	return nil
 }
 
-// ListClients found in `$XDG_CONFIG_HOME/{appName}/clients`.
-//
-// If $XDG_DATA_HOME doesnt exists, fallback to `$HOME/.local/share/`.
-func (s *Storage) List(inst *instance.Instance) ([]Client, error) {
-	clientsDir := path.Join(s.dir, inst.Name())
-
-	entries, err := os.ReadDir(clientsDir)
+func (s *Storage) List() ([]Client, error) {
+	entries, err := os.ReadDir(s.dir)
 	if errors.Is(err, os.ErrNotExist) {
 		return []Client{}, nil
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to open the dir %q: %w", clientsDir, err)
+		return nil, fmt.Errorf("failed to open the dir %q: %w", s.dir, err)
 	}
 
 	res := make([]Client, len(entries))
@@ -62,7 +55,7 @@ func (s *Storage) List(inst *instance.Instance) ([]Client, error) {
 	for i, entry := range entries {
 		clientName := strings.TrimSuffix(entry.Name(), ".json")
 
-		client, err := s.Load(inst, clientName)
+		client, err := s.Load(clientName)
 		if err != nil {
 			return nil, fmt.Errorf("failed to load %q: %w", entry.Name(), err)
 		}
@@ -73,8 +66,8 @@ func (s *Storage) List(inst *instance.Instance) ([]Client, error) {
 	return res, nil
 }
 
-func (s *Storage) Load(inst *instance.Instance, client string) (*Client, error) {
-	clientPath := path.Join(s.dir, inst.Name(), client+".json")
+func (s *Storage) Load(client string) (*Client, error) {
+	clientPath := path.Join(s.dir, client+".json")
 
 	raw, err := os.ReadFile(clientPath)
 	if err != nil {
@@ -90,8 +83,8 @@ func (s *Storage) Load(inst *instance.Instance, client string) (*Client, error) 
 	return &res, nil
 }
 
-func (s *Storage) Delete(inst *instance.Instance, client string) error {
-	err := os.Remove(path.Join(s.dir, inst.Name(), client+".json"))
+func (s *Storage) Delete(client string) error {
+	err := os.Remove(path.Join(s.dir, client+".json"))
 	if errors.Is(err, os.ErrNotExist) {
 		return nil
 	}

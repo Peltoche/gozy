@@ -17,7 +17,7 @@ func NewDescribeCmd(tb toolbox.Toolbox) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			inst := utils.GetInstance(cmd, tb)
 
-			res, err := tb.ClientStorage().Load(inst, args[0])
+			res, err := tb.ClientStorage(inst).Load(args[0])
 			if err != nil {
 				cmd.Printf("client %q not found: run \"%s client list\" to have the available clients\n", args[0], tb.AppName())
 				os.Exit(1)

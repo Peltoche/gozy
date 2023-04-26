@@ -1,8 +1,6 @@
 package toolbox
 
 import (
-	"path"
-
 	"github.com/Peltoche/gozy/sdk/client"
 	"github.com/Peltoche/gozy/sdk/config"
 	"github.com/Peltoche/gozy/sdk/instance"
@@ -13,15 +11,15 @@ import (
 // It contains real implementations and so have access
 // real data. It should never be used in tests.
 type Prod struct {
-	cfgSvc        ConfigService
-	clientStorage ClientStorageService
+	cfgSvc          ConfigService
+	instanceStorage InstanceStorageService
 }
 
 func NewProd() *Prod {
 	cfgSvc := config.NewXDGConfig(appName)
-	clientStorage := client.NewStorage(path.Join(cfgSvc.Dir(), clientDir))
+	instanceStorage := instance.NewStorage(appName)
 
-	return &Prod{cfgSvc, clientStorage}
+	return &Prod{cfgSvc, instanceStorage}
 }
 
 func (p *Prod) AppName() string {
@@ -36,10 +34,14 @@ func (p *Prod) Instance(i *instance.Instance) InstanceService {
 	return instance.NewHTTPClient(i)
 }
 
-func (p *Prod) Client(instance *instance.Instance) ClientService {
-	return client.NewHTTPClient(instance)
+func (p *Prod) InstanceStorage() InstanceStorageService {
+	return p.instanceStorage
 }
 
-func (p *Prod) ClientStorage() ClientStorageService {
-	return p.clientStorage
+func (p *Prod) Client(inst *instance.Instance) ClientService {
+	return client.NewHTTPClient(inst)
+}
+
+func (p *Prod) ClientStorage(inst *instance.Instance) ClientStorageService {
+	return client.NewStorage(appName, inst)
 }

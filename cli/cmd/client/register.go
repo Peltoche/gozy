@@ -35,7 +35,7 @@ func NewRegisterCmd(tb toolbox.Toolbox) *cobra.Command {
 			}
 
 			fmt.Printf("Client %q created for %s\n", res.ClientName, inst.Name())
-			err = tb.ClientStorage().Save(inst, res)
+			err = tb.ClientStorage(inst).Save(res)
 			if err != nil {
 				cmd.PrintErrln(err)
 				os.Exit(1)

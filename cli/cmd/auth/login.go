@@ -86,7 +86,7 @@ func registerClient(ctx context.Context, tb toolbox.Toolbox, inst *instance.Inst
 		return fmt.Errorf("failed to register the gozy client: %w", err)
 	}
 
-	err = tb.ClientStorage().Save(inst, res)
+	err = tb.ClientStorage(inst).Save(res)
 	if err != nil {
 		return fmt.Errorf("failed to save the client config: %w", err)
 	}
